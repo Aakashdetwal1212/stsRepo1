@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.employee.bean.EmployeeUpdate;
 import com.employee.bean.Employeedto;
 import com.employee.entity.Employee;
-import com.employee.registery.IEmployeeRegistery;
+import com.employee.repository.IEmployeeRegistery;
 
 @Service
 public class EmpSrvcImpl implements IEmployeeService {
