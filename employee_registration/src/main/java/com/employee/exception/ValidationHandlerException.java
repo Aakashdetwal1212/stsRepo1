@@ -28,7 +28,6 @@ public class ValidationHandlerException extends ResponseEntityExceptionHandler{
    		errors.put("status", status.value());
    		List<String>  error = ex.getBindingResult().getFieldErrors().stream().map(x ->
    			x.getDefaultMessage()).collect(Collectors.toList());
-   		System.out.println("666666666666666");
    		errors.put("error", error);
    		
    		return new ResponseEntity<>(errors,headers,status);
