@@ -14,6 +14,11 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,7 +27,11 @@ import lombok.Data;
 @Entity
 @Table(name="employee")
 @Data
-public class Employee {
+@SQLDelete(sql = "UPDATE employee SET deleted=true WHERE id=?")
+//@Where(clause = "deleted = 0")
+//@FilterDef(name = "deletedEmployeeFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+//@Filter(name = "deletedEmployeeFilter", condition = "deleted = :isDeleted")
+public class Employee {             //false : not deleted, true : deleted
 
 	@Id
 	@Column(name = "e_id")
@@ -36,9 +45,8 @@ public class Employee {
 	@NotNull(message = "lastName should be filled")
 	@NotEmpty(message = "lastName should be filled")
 	private String lastName;
-	@Column(name= "employee_id")
 	@NotNull(message = "EmployeeId should be filled")
-	private int employeeId;
+	private int id;
 	@NotNull(message = "age should be filled")
 	@Min(value = 18, message = "min age should be 18")
 	private int age;
@@ -55,4 +63,5 @@ public class Employee {
 	private Date dob;
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	private Date doj;
+	private boolean deleted = Boolean.FALSE;
 }

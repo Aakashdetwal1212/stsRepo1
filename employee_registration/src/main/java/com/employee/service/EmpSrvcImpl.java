@@ -2,6 +2,7 @@ package com.employee.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,8 @@ public class EmpSrvcImpl implements IEmployeeService {
 	@Transactional(readOnly = true)
 	public Employeedto getEmployee(int employeeId) {	
 	
-		employee = iEmployeeRegistery.findByemployeeId(employeeId);
+		//employee = iEmployeeRegistery.findById(employeeId);
+		employee = iEmployeeRegistery.findByid(employeeId);
 		return empTodto(employee);
 	}
 	
@@ -51,7 +53,7 @@ public class EmpSrvcImpl implements IEmployeeService {
 	@Transactional(readOnly = false)
 	public Employeedto updateEmployee(Employeedto employeedto) {
 		
-		 employee = iEmployeeRegistery.findByemployeeId(employeedto.getEmployeeId());
+		 employee = iEmployeeRegistery.findByid(employeedto.getId());
 		 employee = dtoToemp(employeedto, employee);
 		 employee = iEmployeeRegistery.save(employee);
 		 return empTodto(employee);
@@ -60,7 +62,9 @@ public class EmpSrvcImpl implements IEmployeeService {
 	//delete employee
 	@Transactional(readOnly = false)
 	public void deleteEmployee(int employeeId) {
-		iEmployeeRegistery.deleteByemployeeId(employeeId);
+		System.out.println("before call repo");
+		iEmployeeRegistery.deleteByid(employeeId);
+		System.out.println("after call repo");
 	}
 	
 	//converting employee to dto
@@ -68,13 +72,14 @@ public class EmpSrvcImpl implements IEmployeeService {
 		employeedto = new Employeedto();
 		employeedto.setFirstName(employee.getFirstName());
 		employeedto.setLastName(employee.getLastName());
-		employeedto.setEmployeeId(employee.getEmployeeId());
+		employeedto.setId(employee.getId());
 		employeedto.setPincode(employee.getPincode());
 		employeedto.setCity(employee.getCity());
 		employeedto.setBloodGroup(employee.getBloodGroup());
 		employeedto.setAge(employee.getAge());
 		employeedto.setDob(employee.getDob());
 		employeedto.setDoj(employee.getDoj());
+		employeedto.setDeleted(employee.isDeleted());
 		return employeedto;
 	}
 	
@@ -84,13 +89,14 @@ public class EmpSrvcImpl implements IEmployeeService {
 			employeedto = new Employeedto();
 			employeedto.setFirstName(emp.getFirstName());
 			employeedto.setLastName(emp.getLastName());
-			employeedto.setEmployeeId(emp.getEmployeeId());
+			employeedto.setId(emp.getId());
 			employeedto.setPincode(emp.getPincode());
 			employeedto.setCity(emp.getCity());
 			employeedto.setBloodGroup(emp.getBloodGroup());
 			employeedto.setAge(emp.getAge());
 			employeedto.setDob(emp.getDob());
 			employeedto.setDoj(emp.getDoj());
+			employeedto.setDeleted(emp.isDeleted());
 		    return employeedto;
 		}).collect(Collectors.toList());
 	}
@@ -100,13 +106,14 @@ public class EmpSrvcImpl implements IEmployeeService {
 
 			employee.setFirstName(employeedto.getFirstName());
 			employee.setLastName(employeedto.getLastName());
-			employee.setEmployeeId(employeedto.getEmployeeId());
+			employee.setId(employeedto.getId());
 			employee.setPincode(employeedto.getPincode());
 			employee.setCity(employeedto.getCity());
 			employee.setBloodGroup(employeedto.getBloodGroup());
 			employee.setAge(employeedto.getAge());
 			employee.setDob(employeedto.getDob());
 			employee.setDoj(employeedto.getDoj());
+			employee.setDeleted(employeedto.isDeleted());
 			return employee;
 		}
 }

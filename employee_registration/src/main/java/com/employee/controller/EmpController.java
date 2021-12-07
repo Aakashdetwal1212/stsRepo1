@@ -57,7 +57,5 @@ public class EmpController {
 		return "emp number"+employeeId+" deleted";
 	}
 	
-	//public String deleteEmp(@PathVariable("employeeId") String employeeId) {
-		
-	//}
+	
 }

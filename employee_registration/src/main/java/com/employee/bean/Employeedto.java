@@ -21,7 +21,7 @@ public class Employeedto {
 	@NotEmpty(message = "lastName should be filled")
 	private String lastName;
 	@NotNull(message = "EmployeeId should be filled")
-	private int employeeId;
+	private int id;
 	@Min(value = 18, message = "min age should be 18")
 	private int age;
 	@NotNull(message = "city should be filled")
@@ -36,4 +36,5 @@ public class Employeedto {
 	private Date dob;
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	private Date doj;
+	private boolean deleted;
 }

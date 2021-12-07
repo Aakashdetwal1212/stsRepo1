@@ -8,6 +8,6 @@ import com.employee.entity.Employee;
 @Repository
 public interface IEmployeeRegistery extends JpaRepository<Employee, Integer> {
 
-	public Employee findByemployeeId(int employeeId);
-	public void deleteByemployeeId(int employeeId);	
+	public Employee findByid(int employeeId);
+	public void deleteByid(int employeeId);	
 }
