@@ -1,6 +1,9 @@
 package com.employee.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -10,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.employee.entity.Employee;
 
 @Repository
-public interface IEmployeeRegistery extends JpaRepository<Employee, Integer>, PagingAndSortingRepository<Employee, Integer> {
+public interface IEmployeeRegistery extends JpaSpecificationExecutor<Employee>,JpaRepository<Employee, Integer>, PagingAndSortingRepository<Employee, Integer> {
 
 	public Employee findByid(int employeeId);
 
@@ -23,4 +26,7 @@ public interface IEmployeeRegistery extends JpaRepository<Employee, Integer>, Pa
 	@Query("DELETE FROM Employee e WHERE e.id = :employeeId")
 	public void hardDeleteByid(@Param("employeeId") int employeeId);
     
+	public List<Employee> findByfirstName(String firstName);
+	public List<Employee> findBylastName(String lastName);
+	public List<Employee> findBypincode(int pincode);
 }

@@ -71,6 +71,30 @@ public class EmpSrvcImpl implements IEmployeeService {
 		iEmployeeRegistery.hardDeleteByid(employeeId);
 	}
 	
+	//search by firstName
+	@Transactional(readOnly = true)
+	public List<Employeedto> searchByfirstName(String firstName){
+		List<Employee> employees;
+		employees = iEmployeeRegistery.findByfirstName(firstName);
+		return listEmpTodto(employees);
+	}
+	
+	//search by lastName
+	@Transactional(readOnly = true)
+	public List<Employeedto> searchBylastName(String lastName){
+		List<Employee> employees;
+		employees = iEmployeeRegistery.findBylastName(lastName);
+		return listEmpTodto(employees);
+	}
+	
+	//search by pincode
+	@Transactional(readOnly = true)
+	public List<Employeedto> searchByPincode(int pincode){
+		List<Employee> employees;
+		employees = iEmployeeRegistery.findBypincode(pincode);
+		return listEmpTodto(employees);
+	}
+	
 	//converting employee to dto
 	public Employeedto empTodto(Employee employee) {
 		employeedto = new Employeedto();
