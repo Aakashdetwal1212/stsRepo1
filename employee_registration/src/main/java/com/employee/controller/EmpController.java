@@ -50,12 +50,18 @@ public class EmpController {
 		return empSrvcImpl.updateEmployee(employeedto);
 	}
 	
-	//hard delete
+	//soft delete
 	@DeleteMapping(value = "/deleteemp/{employeeId}")
 	public String deleteEmployee(@PathVariable("employeeId") int employeeId) {
 		empSrvcImpl.deleteEmployee(employeeId);
-		return "emp number"+employeeId+" deleted";
+		return "emp number"+employeeId+" Deactivated";
 	}
 	
+	//hard delete
+	@DeleteMapping(value = "/hdelete/{employeeId}")
+	public String hardDeleteEmployee(@PathVariable("employeeId") int employeeId) {
+		empSrvcImpl.hardDeleteEmployee(employeeId);
+		return "emp number "+employeeId+" deleted";
+	}
 	
 }

@@ -59,12 +59,16 @@ public class EmpSrvcImpl implements IEmployeeService {
 		 return empTodto(employee);
 	}
 	
-	//delete employee
+	//soft delete employee
 	@Transactional(readOnly = false)
 	public void deleteEmployee(int employeeId) {
-		System.out.println("before call repo");
-		iEmployeeRegistery.deleteByid(employeeId);
-		System.out.println("after call repo");
+		iEmployeeRegistery.deleteById(employeeId);
+	}
+	
+	//hard delete employee
+	@Transactional(readOnly = false)
+	public void hardDeleteEmployee(int employeeId) {
+		iEmployeeRegistery.hardDeleteByid(employeeId);
 	}
 	
 	//converting employee to dto

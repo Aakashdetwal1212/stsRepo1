@@ -27,8 +27,8 @@ import lombok.Data;
 @Entity
 @Table(name="employee")
 @Data
-@SQLDelete(sql = "UPDATE employee SET deleted=true WHERE id=?")
-//@Where(clause = "deleted = 0")
+@SQLDelete(sql = "UPDATE Employee SET deleted=1 WHERE id=?")
+@Where(clause = "deleted = 0")
 //@FilterDef(name = "deletedEmployeeFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
 //@Filter(name = "deletedEmployeeFilter", condition = "deleted = :isDeleted")
 public class Employee {             //false : not deleted, true : deleted
