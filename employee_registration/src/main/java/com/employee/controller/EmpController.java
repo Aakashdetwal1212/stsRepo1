@@ -31,6 +31,8 @@ public class EmpController {
 	@Autowired
 	EmpSrvcImpl empSrvcImpl;
 	
+	List<Employeedto> employeedtos;
+	
 	@PostMapping(value = "/new",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Employee> newEmp(@Valid @RequestBody Employee employee) {
 		
@@ -76,7 +78,6 @@ public class EmpController {
 	//search by firstName
 	@GetMapping(value = "/searchbyname/{firstName}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Employeedto>> searchByfirstName(@PathVariable("firstName") String firstName){
-		List<Employeedto> employeedtos;
 		employeedtos = empSrvcImpl.searchByfirstName(firstName);
 		return new ResponseEntity<List<Employeedto>>(employeedtos,HttpStatus.FOUND);
 	}
@@ -84,7 +85,6 @@ public class EmpController {
 	//search by lastName
     @GetMapping(value = "/searchbysername/{lastName}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Employeedto>> searchBylastName(@PathVariable("lastName") String lastName){
-		List<Employeedto> employeedtos;
 		employeedtos = empSrvcImpl.searchBylastName(lastName);
 		return new ResponseEntity<List<Employeedto>>(employeedtos,HttpStatus.FOUND);
 	}
@@ -92,9 +92,14 @@ public class EmpController {
     //search by pincode
   	@GetMapping(value = "/searchbypincode/{pincode}", produces = MediaType.APPLICATION_JSON_VALUE)
   	public ResponseEntity<List<Employeedto>> searchByPincode(@PathVariable("pincode") int pincode){
-  		List<Employeedto> employeedtos;
   		employeedtos = empSrvcImpl.searchByPincode(pincode);
   		return new ResponseEntity<List<Employeedto>>(employeedtos,HttpStatus.FOUND);
   	}
-	
+  	
+  	//sort by dob/doj
+  	@GetMapping(value = "/sort/{field}", produces = MediaType.APPLICATION_JSON_VALUE)
+  	public ResponseEntity<List<Employeedto>> sortByField(@PathVariable("field") String field) {
+  		employeedtos = empSrvcImpl.sortByField(field);
+  		return new ResponseEntity<List<Employeedto>>(employeedtos,HttpStatus.FOUND);
+  	}
 }

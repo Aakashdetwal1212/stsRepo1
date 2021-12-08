@@ -29,4 +29,9 @@ public interface IEmployeeRegistery extends JpaSpecificationExecutor<Employee>,J
 	public List<Employee> findByfirstName(String firstName);
 	public List<Employee> findBylastName(String lastName);
 	public List<Employee> findBypincode(int pincode);
+	public boolean existsByid(int id);
+	
+	public boolean existsByfirstName(String firstName);
+	public boolean existsBylastName(String lastName);
+	public boolean existsBypincode(int pincode);
 }
