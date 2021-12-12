@@ -18,13 +18,13 @@ import com.employee.exception.NoPincodeResourceFoundException;
 import com.employee.exception.NoSernameResourceFoundException;
 import com.employee.exception.ResourceAlreadyExistException;
 import com.employee.exception.ResourceNotFoundException;
-import com.employee.repository.IEmployeeRegistery;
+import com.employee.repository.IEmployeeRepository;
 
 @Service
 public class EmpSrvcImpl implements IEmployeeService {
 
 	@Autowired
-	IEmployeeRegistery iEmployeeRegistery;
+	IEmployeeRepository iEmployeeRepository;
 	
 	Employee employee;
 	Employeedto employeedto;
@@ -33,26 +33,28 @@ public class EmpSrvcImpl implements IEmployeeService {
 	
 	//new Employee
 	@Transactional(readOnly = false)
-	public Employee registerEmp(Employee employee) {
-		if(iEmployeeRegistery.existsByid(employee.getId())) {
+	public Employeedto registerEmp(Employee employee) {
+		if(iEmployeeRepository.existsByid(employee.getId())) {
 			throw new ResourceAlreadyExistException("User "+employee.getId()+" already Existed");
 		}
-		return iEmployeeRegistery.save(employee);	
+		employee = iEmployeeRepository.save(employee);
+		return empTodto(employee);	
 	}
 	
 	//get All employee
 	@Transactional(readOnly = true)
 	public List<Employeedto> getAllEmployee(){
 		
-		employees = iEmployeeRegistery.findAll();
+		employees = iEmployeeRepository.findAll();
 		return listEmpTodto(employees);
 	}
 	
 	//get employee
 	@Transactional(readOnly = true)
 	public Employeedto getEmployee(int employeeId)  {	
-		if(iEmployeeRegistery.existsByid(employeeId))
-		employee = iEmployeeRegistery.findByid(employeeId);
+		
+		if(iEmployeeRepository.existsByid(employeeId))
+		employee = iEmployeeRepository.findByid(employeeId);
 		else
 			throw new ResourceNotFoundException("given user "+employeeId+" not available");
 		return empTodto(employee);
@@ -62,9 +64,9 @@ public class EmpSrvcImpl implements IEmployeeService {
 	@Transactional(readOnly = false)
 	public Employeedto updateEmployee(Employeedto employeedto) {
 		
-		if(iEmployeeRegistery.existsByid(employeedto.getId())) {
-			 employee = dtoToemp(employeedto, employee);
-			 employee = iEmployeeRegistery.save(employee);
+		if(iEmployeeRepository.existsByid(employeedto.getId())) {
+			 employee = dtoToemp(employeedto, new Employee());
+			 employee = iEmployeeRepository.save(employee);
 		}
 		else
 			throw new ResourceNotFoundException("given user "+employeedto.getId()+" not available");
@@ -73,28 +75,30 @@ public class EmpSrvcImpl implements IEmployeeService {
 	
 	//soft delete employee
 	@Transactional(readOnly = false)
-	public void deleteEmployee(int employeeId) throws ResourceNotFoundException {
-		if(iEmployeeRegistery.existsByid(employeeId))
-     		iEmployeeRegistery.deleteById(employeeId);
+	public boolean deleteEmployee(int employeeId) throws ResourceNotFoundException {
+		if(iEmployeeRepository.existsByid(employeeId))
+     		iEmployeeRepository.deleteById(employeeId);
 		else
 			throw new ResourceNotFoundException("given user "+employeeId+" not available");
+		return true;
 	}
 	
 	//hard delete employee
 	@Transactional(readOnly = false)
-	public void hardDeleteEmployee(int employeeId) throws ResourceNotFoundException {
-		if(iEmployeeRegistery.existsByid(employeeId))
-	    	iEmployeeRegistery.hardDeleteByid(employeeId);
+	public boolean hardDeleteEmployee(int employeeId) throws ResourceNotFoundException {
+		if(iEmployeeRepository.existsByid(employeeId))
+	    	iEmployeeRepository.hardDeleteByid(employeeId);
 		else
 			throw new ResourceNotFoundException("given user "+employeeId+" not available");
+		return true;
 	}
 	
 	//search by firstName
 	@Transactional(readOnly = true)
 	public List<Employeedto> searchByfirstName(String firstName){
 		
-		if(iEmployeeRegistery.existsByfirstName(firstName))
-	    	employees = iEmployeeRegistery.findByfirstName(firstName);
+		if(iEmployeeRepository.existsByfirstName(firstName))
+	    	employees = iEmployeeRepository.findByfirstName(firstName);
 		else
 			throw new NoNameResourceFoundException("given users by Name "+firstName+" is not available");
 		return listEmpTodto(employees);
@@ -104,8 +108,8 @@ public class EmpSrvcImpl implements IEmployeeService {
 	@Transactional(readOnly = true)
 	public List<Employeedto> searchBylastName(String lastName){
 		
-		if(iEmployeeRegistery.existsBylastName(lastName))
-	    	employees = iEmployeeRegistery.findBylastName(lastName);
+		if(iEmployeeRepository.existsBylastName(lastName))
+	    	employees = iEmployeeRepository.findBylastName(lastName);
 		else
 			throw new NoSernameResourceFoundException("given users by Sername "+lastName+" is not available");
 		return listEmpTodto(employees);
@@ -115,8 +119,8 @@ public class EmpSrvcImpl implements IEmployeeService {
 	@Transactional(readOnly = true)
 	public List<Employeedto> searchByPincode(int pincode){
 		
-		if(iEmployeeRegistery.existsBypincode(pincode))
-		    employees = iEmployeeRegistery.findBypincode(pincode);
+		if(iEmployeeRepository.existsBypincode(pincode))
+		    employees = iEmployeeRepository.findBypincode(pincode);
 		else
 			throw new NoPincodeResourceFoundException("given users by Pincode "+pincode+" is not available");
 		return listEmpTodto(employees);
@@ -126,7 +130,7 @@ public class EmpSrvcImpl implements IEmployeeService {
 	@Transactional(readOnly = true)
 	public List<Employeedto> sortByField(String field){
 	
-		employees = iEmployeeRegistery.findAll(Sort.by(Sort.Direction.ASC, field));
+		employees = iEmployeeRepository.findAll(Sort.by(Sort.Direction.ASC, field));
 		return listEmpTodto(employees);
 	}
 	
@@ -149,8 +153,8 @@ public class EmpSrvcImpl implements IEmployeeService {
 	
 	//converting List employee to List dto
 	public List<Employeedto> listEmpTodto(List<Employee> employees){
-	
-		return employees.stream().map(emp -> {
+	    List<Employeedto> employeedtos = new ArrayList<Employeedto>();
+		return  employeedtos = employees.stream().map(emp -> {
 			employeedto = new Employeedto();
 			employeedto.setFirstName(emp.getFirstName());
 			employeedto.setLastName(emp.getLastName());

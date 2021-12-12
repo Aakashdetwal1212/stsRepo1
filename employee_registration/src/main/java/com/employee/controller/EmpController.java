@@ -34,17 +34,17 @@ public class EmpController {
 	List<Employeedto> employeedtos;
 	
 	@PostMapping(value = "/new",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Employee> newEmp(@Valid @RequestBody Employee employee) {
+	public ResponseEntity<Employeedto> newEmp(@Valid @RequestBody Employee employee) {
 		
-		Employee employee2 = empSrvcImpl.registerEmp(employee);
-		return new ResponseEntity<Employee>(employee2,HttpStatus.CREATED);
+		Employeedto employeedto = empSrvcImpl.registerEmp(employee);
+		return new ResponseEntity<Employeedto>(employeedto,HttpStatus.CREATED);
 	}
 	
 	@GetMapping(value = "/getall", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Employeedto>> getAllEmp(){
 		List<Employeedto> employeedtos;
 		employeedtos = empSrvcImpl.getAllEmployee();
-		return new ResponseEntity<List<Employeedto>>(employeedtos,HttpStatus.FOUND);
+		return new ResponseEntity<List<Employeedto>>(employeedtos,HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/getemp/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +58,7 @@ public class EmpController {
 	public ResponseEntity<Employeedto> updateEmployee(@Valid @RequestBody Employeedto employeedto) {
 		Employeedto employeedto2;
 		employeedto2 = empSrvcImpl.updateEmployee(employeedto);
-		return new ResponseEntity<Employeedto>(employeedto2, HttpStatus.CREATED);
+		return new ResponseEntity<Employeedto>(employeedto2, HttpStatus.OK);
 	}
 	
 	//soft delete

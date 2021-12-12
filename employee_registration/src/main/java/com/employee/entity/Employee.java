@@ -1,6 +1,9 @@
 package com.employee.entity;
 
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
+
+//import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,15 +15,16 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import lombok.Data;
 
@@ -59,9 +63,45 @@ public class Employee {             //false : not deleted, true : deleted
 	@NotNull(message = "Bloodgroup should be filled")
 	@NotEmpty(message = "Bloodgroup should be filled")
 	private String bloodGroup;
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	private Date dob;
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	private Date doj;
+	//@JsonDeserialize(using = LocalDateDeserializer.class)  
+	//@JsonSerialize(using = LocalDateSerializer.class) 
+	//@DateTimeFormat(pattern = "dd-MM-yyyy")
+	//@JsonFormat(pattern = "dd-MM-yyyy")
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private java.util.Date dob;
+	//@JsonDeserialize(using = LocalDateDeserializer.class)  
+	//@JsonSerialize(using = LocalDateSerializer.class) 
+	//@DateTimeFormat(pattern = "dd-MM-yyyy")
+	//@JsonFormat(pattern = "dd-MM-yyyy")
+	//@DateTimeFormat(pattern = "dd-MM-yyyy")
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private java.util.Date doj;
 	private boolean deleted = Boolean.FALSE;
+	public Employee(
+			String firstName,
+			String lastName,
+			int id,
+			int age,
+			String city,
+			int pincode,
+		    String bloodGroup,
+			java.util.Date dob, java.util.Date doj) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.id = id;
+		this.age = age;
+		this.city = city;
+		this.pincode = pincode;
+		this.bloodGroup = bloodGroup;
+		this.dob = dob;
+		this.doj = doj;
+	}
+	
+	public Employee() {
+		// TODO Auto-generated constructor stub
+	}
+	
 }
