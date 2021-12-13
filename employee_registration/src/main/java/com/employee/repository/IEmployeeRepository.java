@@ -19,7 +19,7 @@ public interface IEmployeeRepository extends JpaSpecificationExecutor<Employee>,
 
 	@Modifying
 	@Query("UPDATE Employee SET deleted=1 WHERE id= :employeeId")
-	public boolean deleteById(int employeeId);	
+	public int deleteById(int employeeId);	
 	
 
 	@Modifying

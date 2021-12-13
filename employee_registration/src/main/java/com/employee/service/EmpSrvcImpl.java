@@ -75,12 +75,12 @@ public class EmpSrvcImpl implements IEmployeeService {
 	
 	//soft delete employee
 	@Transactional(readOnly = false)
-	public boolean deleteEmployee(int employeeId) throws ResourceNotFoundException {
+	public int deleteEmployee(int employeeId) throws ResourceNotFoundException {
 		if(iEmployeeRepository.existsByid(employeeId))
      		iEmployeeRepository.deleteById(employeeId);
 		else
 			throw new ResourceNotFoundException("given user "+employeeId+" not available");
-		return true;
+		return 1;
 	}
 	
 	//hard delete employee
