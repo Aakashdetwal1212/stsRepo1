@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/neosoft_task
+    username: root
+    password: aakash
+  jpa:
+    show-sql: true
+    generate-ddl: true
+server:
+  port: 8081  
