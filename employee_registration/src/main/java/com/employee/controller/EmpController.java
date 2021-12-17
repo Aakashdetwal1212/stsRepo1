@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.employee.bean.EmployeeUpdate;
 import com.employee.bean.Employeedto;
 import com.employee.entity.Employee;
 import com.employee.service.EmpSrvcImpl;

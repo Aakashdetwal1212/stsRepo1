@@ -64,7 +64,7 @@ public class Employeedto {
 			@NotNull(message = "city should be filled") @NotEmpty(message = "city should be filled") String city,
 			@NotNull(message = "pincode should be filled") int pincode,
 			@NotNull(message = "Bloodgroup should be filled") @NotEmpty(message = "Bloodgroup should be filled") String bloodGroup,
-			java.util.Date dob, java.util.Date doj, boolean deleted) {
+			java.util.Date dob, java.util.Date doj, boolean deleted) {   //NOSONAR
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;

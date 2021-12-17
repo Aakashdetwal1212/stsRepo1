@@ -2,7 +2,6 @@ package com.employee.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.employee.bean.EmployeeUpdate;
 import com.employee.bean.Employeedto;
 import com.employee.entity.Employee;
 import com.employee.exception.NoNameResourceFoundException;
