@@ -8,11 +8,16 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.employee.entity.Employee;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class Employeedto {
 
 	@NotNull(message = "FirstName should be filled")

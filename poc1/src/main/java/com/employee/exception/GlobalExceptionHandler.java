@@ -18,7 +18,7 @@ import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class ValidationHandlerException extends ResponseEntityExceptionHandler{
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 	 
    @Override
    	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -26,8 +26,7 @@ public class ValidationHandlerException extends ResponseEntityExceptionHandler{
    		Map< String, Object> errors = new HashMap<String, Object>();
    		errors.put("timeStamp", new java.util.Date());
    		errors.put("status", status.value());
-   		List<String>  error = ex.getBindingResult().getFieldErrors().stream().map(x ->
-   			x.getDefaultMessage()).collect(Collectors.toList());
+   		List<String>  error = ex.getBindingResult().getFieldErrors().stream().map(x -> x.getDefaultMessage()).collect(Collectors.toList());
    		errors.put("error", error);
    		
    		return new ResponseEntity<>(errors,headers,status);
@@ -47,8 +46,8 @@ public class ValidationHandlerException extends ResponseEntityExceptionHandler{
    }
    
    //specific Exception
-   @ExceptionHandler(NoSernameResourceFoundException.class)
-   public ResponseEntity<?> handleNoSernameResourceNotFoundException(NoSernameResourceFoundException exception, WebRequest webRequest) {
+   @ExceptionHandler(NoSurnameResourceFoundException.class)
+   public ResponseEntity<?> handleNoSernameResourceNotFoundException(NoSurnameResourceFoundException exception, WebRequest webRequest) {
 	   ErrorDetails errorDetails = new ErrorDetails(new java.util.Date(), exception.getMessage(), webRequest.getDescription(false));
        return new ResponseEntity(errorDetails, HttpStatus.NOT_FOUND);
    }

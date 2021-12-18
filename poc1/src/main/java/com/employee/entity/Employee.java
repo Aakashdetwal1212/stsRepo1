@@ -18,6 +18,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name="employee")
@@ -78,7 +82,7 @@ public class Employee {             //false : not deleted, true : deleted
 			String city,
 			int pincode,
 		    String bloodGroup,
-			java.util.Date dateOfBirth, java.util.Date dateOfJoin) {
+			java.util.Date dateOfBirth, java.util.Date dateOfJoin) { //NOSONAR
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;

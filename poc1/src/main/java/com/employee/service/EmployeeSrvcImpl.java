@@ -13,7 +13,7 @@ import com.employee.bean.Employeedto;
 import com.employee.entity.Employee;
 import com.employee.exception.NoNameResourceFoundException;
 import com.employee.exception.NoPincodeResourceFoundException;
-import com.employee.exception.NoSernameResourceFoundException;
+import com.employee.exception.NoSurnameResourceFoundException;
 import com.employee.exception.ResourceAlreadyExistException;
 import com.employee.exception.ResourceNotFoundException;
 import com.employee.repository.IEmployeeRepository;
@@ -103,7 +103,7 @@ public class EmployeeSrvcImpl implements IEmployeeService {
 		if (iEmployeeRepository.existsBylastName(lastName))
 			employees = iEmployeeRepository.findBylastName(lastName);
 		else
-			throw new NoSernameResourceFoundException("given users by Sername " + lastName + " is not available");
+			throw new NoSurnameResourceFoundException("given users by Sername " + lastName + " is not available");
 		return listEmpTodto(employees);
 	}
 

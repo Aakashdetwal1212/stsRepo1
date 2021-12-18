@@ -2,14 +2,10 @@ package com.employee.exception;
 
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
-
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-//@Component
+@Getter  
 public class ErrorDetails {
 
 	private Date timeStamp;
