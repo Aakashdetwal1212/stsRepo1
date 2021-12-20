@@ -9,48 +9,48 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.employee.bean.Employeedto;
+import com.employee.bean.EmployeeDto;
 import com.employee.entity.Employee;
 import com.employee.exception.NoNameResourceFoundException;
 import com.employee.exception.NoPincodeResourceFoundException;
 import com.employee.exception.NoSurnameResourceFoundException;
 import com.employee.exception.ResourceAlreadyExistException;
 import com.employee.exception.ResourceNotFoundException;
-import com.employee.repository.IEmployeeRepository;
+import com.employee.repository.EmployeeRepository;
 
 @Service
-public class EmployeeSrvcImpl implements IEmployeeService {
+public class EmployeeSrvcImpl implements EmployeeService {
 
 	@Autowired
-	IEmployeeRepository iEmployeeRepository;
+	EmployeeRepository EmployeeRepository;
 
 	Employee employee;
-	Employeedto employeedto;
+	EmployeeDto employeeDto;
 	List<Employee> employees;
-	List<Employeedto> employeedtos;
+	List<EmployeeDto> employeeDtos;
 
 	// add employee
 	@Transactional(readOnly = false)
-	public Employeedto addEmployee(Employee employee) {
-		if (iEmployeeRepository.existsByid(employee.getId())) {
+	public EmployeeDto addEmployee(Employee employee) {
+		if (EmployeeRepository.existsById(employee.getId())) {
 			throw new ResourceAlreadyExistException("User " + employee.getId() + " already Existed");
 		}
-		employee = iEmployeeRepository.save(employee);
+		employee = EmployeeRepository.save(employee);
 		return empTodto(employee);
 	}
 
 	// get all employee
 	@Transactional(readOnly = true)
-	public List<Employeedto> getAllEmployee() {
-		employees = iEmployeeRepository.findAll();
-		return listEmpTodto(employees);
+	public List<EmployeeDto> getAllEmployee() {
+		employees = EmployeeRepository.findAll();
+		return listEmpToDto(employees);
 	}
 
 	// get employee
 	@Transactional(readOnly = true)
-	public Employeedto getEmployeeById(int id) {
-		if (iEmployeeRepository.existsByid(id))
-			employee = iEmployeeRepository.findByid(id);
+	public EmployeeDto getEmployeeById(int id) {
+		if (EmployeeRepository.existsById(id))
+			employee = EmployeeRepository.findByid(id);
 		else
 			throw new ResourceNotFoundException("given user " + id + " not available");
 		return empTodto(employee);
@@ -58,20 +58,20 @@ public class EmployeeSrvcImpl implements IEmployeeService {
 
 	// update employee
 	@Transactional(readOnly = false)
-	public Employeedto updateEmployee(Employeedto employeedto) {
-		if (iEmployeeRepository.existsByid(employeedto.getId())) {
-			employee = dtoToemp(employeedto, new Employee());
-			employee = iEmployeeRepository.save(employee);
+	public EmployeeDto updateEmployee(EmployeeDto employeeDto) {
+		if (EmployeeRepository.existsById(employeeDto.getId())) {
+			employee = dtoToEmp(employeeDto, new Employee());
+			employee = EmployeeRepository.save(employee);
 		} else
-			throw new ResourceNotFoundException("given user " + employeedto.getId() + " not available");
+			throw new ResourceNotFoundException("given user " + employeeDto.getId() + " not available");
 		return empTodto(employee);
 	}
 
 	// soft delete employee
 	@Transactional(readOnly = false)
 	public boolean deleteEmployeeById(int id) throws ResourceNotFoundException {
-		if (iEmployeeRepository.existsByid(id))
-			iEmployeeRepository.deleteById(id);
+		if (EmployeeRepository.existsById(id))
+			EmployeeRepository.deleteById(id);
 		else
 			throw new ResourceNotFoundException("given user " + id + " not available");
 		return true;
@@ -80,8 +80,8 @@ public class EmployeeSrvcImpl implements IEmployeeService {
 	// hard delete employee
 	@Transactional(readOnly = false)
 	public boolean hardDeleteEmployeeById(int id) throws ResourceNotFoundException {
-		if (iEmployeeRepository.existsByid(id))
-			iEmployeeRepository.hardDeleteByid(id);
+		if (EmployeeRepository.existsById(id))
+			EmployeeRepository.hardDeleteByid(id);
 		else
 			throw new ResourceNotFoundException("given user " + id + " not available");
 		return true;
@@ -89,88 +89,88 @@ public class EmployeeSrvcImpl implements IEmployeeService {
 
 	// search by firstName
 	@Transactional(readOnly = true)
-	public List<Employeedto> searchByfirstName(String firstName) {
-		if (iEmployeeRepository.existsByfirstName(firstName))
-			employees = iEmployeeRepository.findByfirstName(firstName);
+	public List<EmployeeDto> searchByFirstName(String firstName) {
+		if (EmployeeRepository.existsByFirstName(firstName))
+			employees = EmployeeRepository.findByFirstName(firstName);
 		else
 			throw new NoNameResourceFoundException("given users by Name " + firstName + " is not available");
-		return listEmpTodto(employees);
+		return listEmpToDto(employees);
 	}
 
 	// search by lastName
 	@Transactional(readOnly = true)
-	public List<Employeedto> searchBylastName(String lastName) {
-		if (iEmployeeRepository.existsBylastName(lastName))
-			employees = iEmployeeRepository.findBylastName(lastName);
+	public List<EmployeeDto> searchByLastName(String lastName) {
+		if (EmployeeRepository.existsByLastName(lastName))
+			employees = EmployeeRepository.findByLastName(lastName);
 		else
 			throw new NoSurnameResourceFoundException("given users by Sername " + lastName + " is not available");
-		return listEmpTodto(employees);
+		return listEmpToDto(employees);
 	}
 
 	// search by pincode
 	@Transactional(readOnly = true)
-	public List<Employeedto> searchByPincode(int pincode) {
-		if (iEmployeeRepository.existsBypincode(pincode))
-			employees = iEmployeeRepository.findBypincode(pincode);
+	public List<EmployeeDto> searchByPincode(int pincode) {
+		if (EmployeeRepository.existsByPincode(pincode))
+			employees = EmployeeRepository.findByPincode(pincode);
 		else
 			throw new NoPincodeResourceFoundException("given users by Pincode " + pincode + " is not available");
-		return listEmpTodto(employees);
+		return listEmpToDto(employees);
 	}
 
 	// sort by dob/doj
 	@Transactional(readOnly = true)
-	public List<Employeedto> sortByField(String field) {
-		employees = iEmployeeRepository.findAll(Sort.by(Sort.Direction.ASC, field));
-		return listEmpTodto(employees);
+	public List<EmployeeDto> sortByField(String field) {
+		employees = EmployeeRepository.findAll(Sort.by(Sort.Direction.ASC, field));
+		return listEmpToDto(employees);
 	}
 
 	// converting employee to dto
-	public Employeedto empTodto(Employee employee) {
-		employeedto = new Employeedto();
-		employeedto.setFirstName(employee.getFirstName());
-		employeedto.setLastName(employee.getLastName());
-		employeedto.setId(employee.getId());
-		employeedto.setPincode(employee.getPincode());
-		employeedto.setCity(employee.getCity());
-		employeedto.setBloodGroup(employee.getBloodGroup());
-		employeedto.setAge(employee.getAge());
-		employeedto.setDateOfBirth(employee.getDateOfBirth());
-		employeedto.setDateOfJoin(employee.getDateOfJoin());
-		employeedto.setDeleted(employee.isDeleted());
-		return employeedto;
+	public EmployeeDto empTodto(Employee employee) {
+		employeeDto = new EmployeeDto();
+		employeeDto.setFirstName(employee.getFirstName());
+		employeeDto.setLastName(employee.getLastName());
+		employeeDto.setId(employee.getId());
+		employeeDto.setPincode(employee.getPincode());
+		employeeDto.setCity(employee.getCity());
+		employeeDto.setBloodGroup(employee.getBloodGroup());
+		employeeDto.setAge(employee.getAge());
+		employeeDto.setDateOfBirth(employee.getDateOfBirth());
+		employeeDto.setDateOfJoin(employee.getDateOfJoin());
+		employeeDto.setDeleted(employee.isDeleted());
+		return employeeDto;
 	}
 
 	// converting List employee to List dto
-	public List<Employeedto> listEmpTodto(List<Employee> employees) {
-		employeedtos = new ArrayList<Employeedto>();
-		return employeedtos = employees.stream().map(emp -> {
-			employeedto = new Employeedto();
-			employeedto.setFirstName(emp.getFirstName());
-			employeedto.setLastName(emp.getLastName());
-			employeedto.setId(emp.getId());
-			employeedto.setPincode(emp.getPincode());
-			employeedto.setCity(emp.getCity());
-			employeedto.setBloodGroup(emp.getBloodGroup());
-			employeedto.setAge(emp.getAge());
-			employeedto.setDateOfBirth(emp.getDateOfBirth());
-			employeedto.setDateOfJoin(emp.getDateOfJoin());
-			employeedto.setDeleted(emp.isDeleted());
-			return employeedto;
+	public List<EmployeeDto> listEmpToDto(List<Employee> employees) {
+		employeeDtos = new ArrayList<EmployeeDto>();
+		return employeeDtos = employees.stream().map(emp -> {
+			employeeDto = new EmployeeDto();
+			employeeDto.setFirstName(emp.getFirstName());
+			employeeDto.setLastName(emp.getLastName());
+			employeeDto.setId(emp.getId());
+			employeeDto.setPincode(emp.getPincode());
+			employeeDto.setCity(emp.getCity());
+			employeeDto.setBloodGroup(emp.getBloodGroup());
+			employeeDto.setAge(emp.getAge());
+			employeeDto.setDateOfBirth(emp.getDateOfBirth());
+			employeeDto.setDateOfJoin(emp.getDateOfJoin());
+			employeeDto.setDeleted(emp.isDeleted());
+			return employeeDto;
 		}).collect(Collectors.toList());
 	}
 
-	// converting employeedto to employee
-	public Employee dtoToemp(Employeedto employeedto, Employee employee) {
-		employee.setFirstName(employeedto.getFirstName());
-		employee.setLastName(employeedto.getLastName());
-		employee.setId(employeedto.getId());
-		employee.setPincode(employeedto.getPincode());
-		employee.setCity(employeedto.getCity());
-		employee.setBloodGroup(employeedto.getBloodGroup());
-		employee.setAge(employeedto.getAge());
-		employee.setDateOfBirth(employeedto.getDateOfBirth());
-		employee.setDateOfJoin(employeedto.getDateOfJoin());
-		employee.setDeleted(employeedto.isDeleted());
+	// converting employeeDto to employee
+	public Employee dtoToEmp(EmployeeDto employeeDto, Employee employee) {
+		employee.setFirstName(employeeDto.getFirstName());
+		employee.setLastName(employeeDto.getLastName());
+		employee.setId(employeeDto.getId());
+		employee.setPincode(employeeDto.getPincode());
+		employee.setCity(employeeDto.getCity());
+		employee.setBloodGroup(employeeDto.getBloodGroup());
+		employee.setAge(employeeDto.getAge());
+		employee.setDateOfBirth(employeeDto.getDateOfBirth());
+		employee.setDateOfJoin(employeeDto.getDateOfJoin());
+		employee.setDeleted(employeeDto.isDeleted());
 		return employee;
 	}
 }

@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,14 +19,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.employee.bean.Employeedto;
+import com.employee.bean.EmployeeDto;
 import com.employee.entity.Employee;
 import com.employee.exception.NoNameResourceFoundException;
 import com.employee.exception.NoPincodeResourceFoundException;
 import com.employee.exception.NoSurnameResourceFoundException;
 import com.employee.exception.ResourceAlreadyExistException;
 import com.employee.exception.ResourceNotFoundException;
-import com.employee.repository.IEmployeeRepository;
+import com.employee.repository.EmployeeRepository;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -37,25 +34,25 @@ import com.employee.repository.IEmployeeRepository;
 class EmployeeSrvcImplTest {
 
 	@Mock
-	private IEmployeeRepository employeeRepository;
+	private EmployeeRepository employeeRepository;
 
 	@InjectMocks
 	private EmployeeSrvcImpl empSrvcImpl;
 	private Employee employee;
 
-	public Employeedto buildResp() {
-		Employeedto employeedto = new Employeedto();
-		employeedto.setFirstName("bob");
-		employeedto.setLastName("chohan");
-		employeedto.setId(1010);
-		employeedto.setPincode(919191);
-		employeedto.setDateOfJoin(new Date());
-		employeedto.setDateOfBirth(new Date());
-		employeedto.setCity("goa");
-		employeedto.setBloodGroup("A+");
-		employeedto.setAge(28);
-		employeedto.setDeleted(false);
-		return employeedto;
+	public EmployeeDto buildResp() {
+		EmployeeDto employeeDto = new EmployeeDto();
+		employeeDto.setFirstName("bob");
+		employeeDto.setLastName("chohan");
+		employeeDto.setId(1010);
+		employeeDto.setPincode(919191);
+		employeeDto.setDateOfJoin(new Date());
+		employeeDto.setDateOfBirth(new Date());
+		employeeDto.setCity("goa");
+		employeeDto.setBloodGroup("A+");
+		employeeDto.setAge(28);
+		employeeDto.setDeleted(false);
+		return employeeDto;
 	}
 
 	public Employee buildEmployee() {
@@ -85,19 +82,19 @@ class EmployeeSrvcImplTest {
 		employee.setDateOfBirth(new Date());
 		employee.setDateOfJoin(new Date());
 
-		Mockito.when(employeeRepository.existsByid(buildEmployee().getId())).thenReturn(false);
+		Mockito.when(employeeRepository.existsById(buildEmployee().getId())).thenReturn(false);
 		Mockito.when(employeeRepository.save(employee)).thenReturn(employee);
-		Employeedto employeedto = empSrvcImpl.addEmployee(employee);
-		assertThat(employeedto.getFirstName()).isEqualTo(buildResp().getFirstName());
+		EmployeeDto employeeDto = empSrvcImpl.addEmployee(employee);
+		assertThat(employeeDto.getFirstName()).isEqualTo(buildResp().getFirstName());
 	}
 
 	@Test
 	public void getEmployeeByIdTest() {
 		Mockito.when(employeeRepository.findByid(1010)).thenReturn(buildEmployee());
-		Mockito.when(employeeRepository.existsByid(1010)).thenReturn(true);
+		Mockito.when(employeeRepository.existsById(1010)).thenReturn(true);
 
-		Employeedto employeedto = empSrvcImpl.getEmployeeById(1010);
-		assertThat(employeedto.getFirstName()).isEqualTo(buildResp().getFirstName());
+		EmployeeDto employeeDto = empSrvcImpl.getEmployeeById(1010);
+		assertThat(employeeDto.getFirstName()).isEqualTo(buildResp().getFirstName());
 	}
 
 	@Test
@@ -110,23 +107,23 @@ class EmployeeSrvcImplTest {
 
 		Mockito.when(employeeRepository.findAll()).thenReturn(listEmp);
 
-		List<Employeedto> listEmpDto = empSrvcImpl.getAllEmployee();
+		List<EmployeeDto> listEmpDto = empSrvcImpl.getAllEmployee();
 
 		assertEquals(2, listEmpDto.size());
 	}
 
 	@Test
 	public void updateEmployeeTest() {
-		Mockito.when(employeeRepository.existsByid(1010)).thenReturn(true);
+		Mockito.when(employeeRepository.existsById(1010)).thenReturn(true);
 		Mockito.when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(buildEmployee());
 
-		Employeedto employeedto = empSrvcImpl.updateEmployee(buildResp());
-		assertThat(employeedto.getFirstName()).isEqualTo(buildResp().getFirstName());
+		EmployeeDto employeeDto = empSrvcImpl.updateEmployee(buildResp());
+		assertThat(employeeDto.getFirstName()).isEqualTo(buildResp().getFirstName());
 	}
 
 	@Test
 	public void deleteEmployeeByIdTest() {
-		Mockito.when(employeeRepository.existsByid(1010)).thenReturn(true);
+		Mockito.when(employeeRepository.existsById(1010)).thenReturn(true);
 		Mockito.when(employeeRepository.deleteById(1010)).thenReturn(1);
 		boolean flag = empSrvcImpl.deleteEmployeeById(1010);
 		assertThat(flag).isTrue();
@@ -134,38 +131,38 @@ class EmployeeSrvcImplTest {
 
 	@Test
 	public void hardDeleteEmployeeByIdTest() {
-		Mockito.when(employeeRepository.existsByid(1010)).thenReturn(true);
+		Mockito.when(employeeRepository.existsById(1010)).thenReturn(true);
 		Mockito.when(employeeRepository.hardDeleteByid(1010)).thenReturn(true);
 		boolean flag = empSrvcImpl.hardDeleteEmployeeById(1010);
 		assertThat(flag).isTrue();
 	}
 	
 	@Test
-	public void searchEmployeeByfirstNameTest() {
+	public void searchEmployeeByFirstNameTest() {
 		Employee employee1 = new Employee("alex", "martin", 1010, 22, "ratlam", 457001, "A+", new Date(), new Date());
 		Employee employee2 = new Employee("alex", "Gussin", 2020, 25, "channai", 223344, "A+", new Date(), new Date());
 		List<Employee> listEmp = new ArrayList<Employee>();
 		listEmp.add(employee1);
 		listEmp.add(employee2);
 		
-		Mockito.when(employeeRepository.existsByfirstName("alex")).thenReturn(true);
-		Mockito.when(employeeRepository.findByfirstName("alex")).thenReturn(listEmp);
-		List<Employeedto> listEmpDto = empSrvcImpl.searchByfirstName("alex");
+		Mockito.when(employeeRepository.existsByFirstName("alex")).thenReturn(true);
+		Mockito.when(employeeRepository.findByFirstName("alex")).thenReturn(listEmp);
+		List<EmployeeDto> listEmpDto = empSrvcImpl.searchByFirstName("alex");
 		
 		assertEquals(2, listEmpDto.size());
 	}
 	
 	@Test
-	public void searchEmployeeBylastNameTest() {
+	public void searchEmployeeByLastNameTest() {
 		Employee employee1 = new Employee("alex", "martin", 1010, 22, "ratlam", 457001, "A+", new Date(), new Date());
 		Employee employee2 = new Employee("rock", "martin", 2020, 25, "channai", 223344, "A+", new Date(), new Date());
 		List<Employee> listEmp = new ArrayList<Employee>();
 		listEmp.add(employee1);
 		listEmp.add(employee2);
 		
-		Mockito.when(employeeRepository.existsBylastName("martin")).thenReturn(true);
-		Mockito.when(employeeRepository.findBylastName("martin")).thenReturn(listEmp);
-		List<Employeedto> listEmpDto = empSrvcImpl.searchBylastName("martin");
+		Mockito.when(employeeRepository.existsByLastName("martin")).thenReturn(true);
+		Mockito.when(employeeRepository.findByLastName("martin")).thenReturn(listEmp);
+		List<EmployeeDto> listEmpDto = empSrvcImpl.searchByLastName("martin");
 		
 		assertEquals(2, listEmpDto.size());
 	}
@@ -178,9 +175,9 @@ class EmployeeSrvcImplTest {
 		listEmp.add(employee1);
 		listEmp.add(employee2);
 		
-		Mockito.when(employeeRepository.existsBypincode(457001)).thenReturn(true);
-		Mockito.when(employeeRepository.findBypincode(457001)).thenReturn(listEmp);
-		List<Employeedto> listEmpDto = empSrvcImpl.searchByPincode(457001);
+		Mockito.when(employeeRepository.existsByPincode(457001)).thenReturn(true);
+		Mockito.when(employeeRepository.findByPincode(457001)).thenReturn(listEmp);
+		List<EmployeeDto> listEmpDto = empSrvcImpl.searchByPincode(457001);
 		
 		assertEquals(2, listEmpDto.size());
 	}
@@ -195,7 +192,7 @@ class EmployeeSrvcImplTest {
 		listEmp.add(employee2);
 		String field = "firstName";
 		Mockito.when(employeeRepository.findAll(Sort.by(Sort.Direction.ASC, field))).thenReturn(listEmp);
-		List<Employeedto> listEmpDto = empSrvcImpl.sortByField(field);
+		List<EmployeeDto> listEmpDto = empSrvcImpl.sortByField(field);
 		
 		assertEquals(2, listEmpDto.size());
 	}
@@ -204,37 +201,37 @@ class EmployeeSrvcImplTest {
 		public void addEmployeeExceptionTest() {
 			Employee employee = new Employee("alex", "martin", 1010, 22, "ratlam", 457001, "A+", new Date(), new Date());
 			
-			Mockito.when(employeeRepository.existsByid(1010)).thenReturn(true);
+			Mockito.when(employeeRepository.existsById(1010)).thenReturn(true);
 			ResourceAlreadyExistException exception = assertThrows(ResourceAlreadyExistException.class, () -> { empSrvcImpl.addEmployee(employee); });
 		    assertTrue(exception.getMessage().contains("User " + employee.getId() + " already Existed"));
 		}
 
 		@Test
 		public void getEmployeeByIdExceptionTest() {
-			Mockito.when(employeeRepository.existsByid(1010)).thenReturn(false);
+			Mockito.when(employeeRepository.existsById(1010)).thenReturn(false);
 			ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> { empSrvcImpl.getEmployeeById(1010); });
 		    assertTrue(exception.getMessage().contains("given user " + 1010 + " not available"));
 		}
 
 		@Test
 		public void updateEmployeeExceptionTest() {
-			Employeedto employeedto = new Employeedto("alex", "martin", 1010, 22, "ratlam", 457001, "A+", new Date(), new Date(),false);
+			EmployeeDto employeeDto = new EmployeeDto("alex", "martin", 1010, 22, "ratlam", 457001, "A+", new Date(), new Date(),false);
 			
-			Mockito.when(employeeRepository.existsByid(1010)).thenReturn(false);
-			ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> { empSrvcImpl.updateEmployee(employeedto); });
-		    assertTrue(exception.getMessage().contains("given user " + employeedto.getId() + " not available"));
+			Mockito.when(employeeRepository.existsById(1010)).thenReturn(false);
+			ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> { empSrvcImpl.updateEmployee(employeeDto); });
+		    assertTrue(exception.getMessage().contains("given user " + employeeDto.getId() + " not available"));
 		}
 	
 		@Test
 		public void deleteEmployeeByIdExceptionTest() {
-			Mockito.when(employeeRepository.existsByid(1010)).thenReturn(false);
+			Mockito.when(employeeRepository.existsById(1010)).thenReturn(false);
 			ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> { empSrvcImpl.deleteEmployeeById(1010); });
 		    assertTrue(exception.getMessage().contains("given user " + 1010 + " not available"));
 		}
 
 		@Test
 		public void hardDeleteEmployeeByIdExceptionTest() {
-			Mockito.when(employeeRepository.existsByid(1010)).thenReturn(false);
+			Mockito.when(employeeRepository.existsById(1010)).thenReturn(false);
 			ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> { empSrvcImpl.hardDeleteEmployeeById(1010); });
 		    assertTrue(exception.getMessage().contains("given user " + 1010 + " not available"));
 		}
@@ -242,23 +239,23 @@ class EmployeeSrvcImplTest {
 		@Test
 		public void searchByfirstNameExceptionTest() {
 			String firstName = "methue";
-			Mockito.when(employeeRepository.existsByfirstName(firstName)).thenReturn(false);
-			NoNameResourceFoundException exception = assertThrows(NoNameResourceFoundException.class, () -> { empSrvcImpl.searchByfirstName(firstName); });
+			Mockito.when(employeeRepository.existsByFirstName(firstName)).thenReturn(false);
+			NoNameResourceFoundException exception = assertThrows(NoNameResourceFoundException.class, () -> { empSrvcImpl.searchByFirstName(firstName); });
 		    assertTrue(exception.getMessage().contains(("given users by Name " + firstName + " is not available")));
 		}
 	
 		@Test
 		public void searchBylastNameExceptionTest() {
 			String lastName = "martin";
-			Mockito.when(employeeRepository.existsBylastName(lastName)).thenReturn(false);
-			NoSurnameResourceFoundException exception = assertThrows(NoSurnameResourceFoundException.class, () -> { empSrvcImpl.searchBylastName(lastName); });
+			Mockito.when(employeeRepository.existsByLastName(lastName)).thenReturn(false);
+			NoSurnameResourceFoundException exception = assertThrows(NoSurnameResourceFoundException.class, () -> { empSrvcImpl.searchByLastName(lastName); });
 		    assertTrue(exception.getMessage().contains(("given users by Sername " + lastName + " is not available")));
 		}
 		
 		@Test
 		public void searchByPincodeExceptionTest() {
 			int pincode = 457001;
-			Mockito.when(employeeRepository.existsBypincode(pincode)).thenReturn(false);
+			Mockito.when(employeeRepository.existsByPincode(pincode)).thenReturn(false);
 			NoPincodeResourceFoundException exception = assertThrows(NoPincodeResourceFoundException.class, () -> { empSrvcImpl.searchByPincode(pincode); });
 		    assertTrue(exception.getMessage().contains(("given users by Pincode " + pincode + " is not available")));
 		}

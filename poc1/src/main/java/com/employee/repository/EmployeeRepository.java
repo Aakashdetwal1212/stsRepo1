@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.employee.entity.Employee;
 
 @Repository
-public interface IEmployeeRepository extends JpaSpecificationExecutor<Employee>,JpaRepository<Employee, Integer>, PagingAndSortingRepository<Employee, Integer> {
+public interface EmployeeRepository extends JpaSpecificationExecutor<Employee>,JpaRepository<Employee, Integer>, PagingAndSortingRepository<Employee, Integer> {
 
 	public Employee findByid(int employeeId);
 
@@ -26,12 +26,12 @@ public interface IEmployeeRepository extends JpaSpecificationExecutor<Employee>,
 	@Query("DELETE FROM Employee e WHERE e.id = :employeeId")
 	public boolean hardDeleteByid(@Param("employeeId") int employeeId);
     
-	public List<Employee> findByfirstName(String firstName);
-	public List<Employee> findBylastName(String lastName);
-	public List<Employee> findBypincode(int pincode);
-	public boolean existsByid(int id);
+	public List<Employee> findByFirstName(String firstName);
+	public List<Employee> findByLastName(String lastName);
+	public List<Employee> findByPincode(int pincode);
+	public boolean existsById(int id);
 	
-	public boolean existsByfirstName(String firstName);
-	public boolean existsBylastName(String lastName);
-	public boolean existsBypincode(int pincode);
+	public boolean existsByFirstName(String firstName);
+	public boolean existsByLastName(String lastName);
+	public boolean existsByPincode(int pincode);
 }

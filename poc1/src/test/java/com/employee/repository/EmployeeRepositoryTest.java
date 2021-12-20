@@ -17,10 +17,10 @@ import com.employee.entity.Employee;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-class IEmployeeRepositoryTest {
+class EmployeeRepositoryTest {
 
 	@Autowired
-	IEmployeeRepository repository;
+	EmployeeRepository repository;
 
 	@Test
 	public void addEmployeeTest() {
@@ -53,14 +53,14 @@ class IEmployeeRepositoryTest {
 	}
 
 	@Test
-	public void findEmployeeByfirstNameTest() {
+	public void findEmployeeByFirstNameTest() {
 
 		Employee employee1 = repository
 				.save(new Employee("piter", "parker", 1010, 27, "ratlam", 333999, "A+", new Date(), new Date()));
 		Employee employee2 = repository
 				.save(new Employee("jack", "john", 1020, 27, "ratlam", 333000, "A+", new Date(), new Date()));
 
-		List<Employee> employees = repository.findByfirstName(employee1.getFirstName());
+		List<Employee> employees = repository.findByFirstName(employee1.getFirstName());
 		assertThat(employees).hasSize(1).contains(employee1);
 	}
 
@@ -71,7 +71,7 @@ class IEmployeeRepositoryTest {
 		Employee employee2 = repository
 				.save(new Employee("jack", "john", 1020, 27, "ratlam", 333000, "A+", new Date(), new Date()));
 
-		List<Employee> employees = repository.findBylastName(employee1.getLastName());
+		List<Employee> employees = repository.findByLastName(employee1.getLastName());
 		assertThat(employees).hasSize(1).contains(employee1);
 	}
 
@@ -84,7 +84,7 @@ class IEmployeeRepositoryTest {
 		repository.save(employee2);
 		repository.save(employee3);
 
-		List<Employee> employees = repository.findBypincode(employee1.getPincode());
+		List<Employee> employees = repository.findByPincode(employee1.getPincode());
 		assertThat(employees).hasSize(2).contains(employee1, employee3);
 	}
 

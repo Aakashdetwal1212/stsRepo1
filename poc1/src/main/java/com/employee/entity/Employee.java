@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,7 +25,8 @@ import lombok.Setter;
 
 @Entity
 @Table(name="employee")
-@Data
+@Getter
+@Setter
 @SQLDelete(sql = "UPDATE Employee SET deleted=1 WHERE id=?")
 @Where(clause = "deleted = 0")
 public class Employee {             //false : not deleted, true : deleted
@@ -36,32 +37,25 @@ public class Employee {             //false : not deleted, true : deleted
 	private int eId;
 	
 	@Column(name = "first_name")
-	@NotNull(message = "FirstName should be filled")
-	@NotEmpty(message = "FirstName should be filled")
+	@NotBlank(message = "firstName can not be blank")
 	private String firstName;
 	
 	@Column(name= "last_name")
-	@NotNull(message = "lastName should be filled")
-	@NotEmpty(message = "lastName should be filled")
+	@NotBlank(message = "firstName can not be blank")
 	private String lastName;
 	
-	@NotNull(message = "EmployeeId should be filled")
+	@NotNull(message = "EmployeeId can not be blank")
 	private int id;
 	
-	@NotNull(message = "age should be filled")
-	@Min(value = 18, message = "min age should be 18")
+	@Min(value = 18, message = "min Age should be 18")
 	private int age;
 	
-	@NotNull(message = "city should be filled")
-	@NotEmpty(message = "city should be filled")
+	@NotBlank(message = "City can not be blank")
 	private String city;
-	
-	//@NotBlank(message = "pincode cannot be blank")
 	private int pincode;
 
 	@Column(name = "blood_group")
-	@NotNull(message = "Bloodgroup should be filled")
-	@NotEmpty(message = "Bloodgroup should be filled")
+	@NotBlank(message = "bloodGroup can not be blank")
 	private String bloodGroup;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

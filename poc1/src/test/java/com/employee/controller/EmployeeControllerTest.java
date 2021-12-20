@@ -34,14 +34,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.employee.bean.Employeedto;
+import com.employee.bean.EmployeeDto;
 import com.employee.entity.Employee;
 import com.employee.exception.NoNameResourceFoundException;
 import com.employee.exception.NoPincodeResourceFoundException;
 import com.employee.exception.NoSurnameResourceFoundException;
 import com.employee.exception.ResourceAlreadyExistException;
 import com.employee.exception.ResourceNotFoundException;
-import com.employee.repository.IEmployeeRepository;
+import com.employee.repository.EmployeeRepository;
 import com.employee.service.EmployeeSrvcImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -54,7 +54,7 @@ public class EmployeeControllerTest {
 	@MockBean
 	EmployeeSrvcImpl empSrvcImpl;
 	@MockBean
-	IEmployeeRepository repository;
+	EmployeeRepository repository;
 
 	@Mock
 	EmployeeController controller;
@@ -65,19 +65,19 @@ public class EmployeeControllerTest {
 
 	private static ObjectMapper mapper = new ObjectMapper();
 
-	public Employeedto buildResp() {
-		Employeedto employeedto = new Employeedto();
-		employeedto.setFirstName("bob");
-		employeedto.setLastName("chohan");
-		employeedto.setId(1010);
-		employeedto.setPincode(919191);
-		employeedto.setDateOfJoin(new Date());
-		employeedto.setDateOfBirth(new Date());
-		employeedto.setCity("goa");
-		employeedto.setBloodGroup("A+");
-		employeedto.setAge(28);
-		employeedto.setDeleted(false);
-		return employeedto;
+	public EmployeeDto buildResp() {
+		EmployeeDto employeeDto = new EmployeeDto();
+		employeeDto.setFirstName("bob");
+		employeeDto.setLastName("chohan");
+		employeeDto.setId(1010);
+		employeeDto.setPincode(919191);
+		employeeDto.setDateOfJoin(new Date());
+		employeeDto.setDateOfBirth(new Date());
+		employeeDto.setCity("goa");
+		employeeDto.setBloodGroup("A+");
+		employeeDto.setAge(28);
+		employeeDto.setDeleted(false);
+		return employeeDto;
 	}
 
 	@Test
@@ -113,7 +113,7 @@ public class EmployeeControllerTest {
 
 		mvcResult = mockMvc.perform(builder).andReturn();
 
-		mockMvc.perform(builder).andExpect(status().isFound()).andExpect(jsonPath("$.firstName", is("bob")))
+		mockMvc.perform(builder).andExpect(status().isOk()).andExpect(jsonPath("$.firstName", is("bob")))
 				.andExpect(jsonPath("$.lastName", is("chohan"))).andExpect(jsonPath("$.pincode", is(919191)))
 				.andExpect(jsonPath("$.id", is(1010))).andExpect(jsonPath("$.city", is("goa")))
 				.andExpect(jsonPath("$.bloodGroup", is("A+"))).andExpect(jsonPath("$.age", is(28)))
@@ -122,20 +122,20 @@ public class EmployeeControllerTest {
 
 	@Test
 	public void updateEmployeeTest() throws Exception {
-		Employeedto employeedto = new Employeedto();
-		employeedto.setFirstName("bob");
-		employeedto.setLastName("chohan");
-		employeedto.setId(20302);
-		employeedto.setPincode(919191);
-		employeedto.setDateOfBirth(new Date());
-		employeedto.setDateOfJoin(new Date());
-		employeedto.setCity("goa");
-		employeedto.setBloodGroup("A+");
-		employeedto.setAge(28);
-		employeedto.setDeleted(false);
+		EmployeeDto employeeDto = new EmployeeDto();
+		employeeDto.setFirstName("bob");
+		employeeDto.setLastName("chohan");
+		employeeDto.setId(20302);
+		employeeDto.setPincode(919191);
+		employeeDto.setDateOfBirth(new Date());
+		employeeDto.setDateOfJoin(new Date());
+		employeeDto.setCity("goa");
+		employeeDto.setBloodGroup("A+");
+		employeeDto.setAge(28);
+		employeeDto.setDeleted(false);
 
-		Mockito.when(empSrvcImpl.updateEmployee(ArgumentMatchers.any())).thenReturn(employeedto);
-		String json = mapper.writeValueAsString(employeedto);
+		Mockito.when(empSrvcImpl.updateEmployee(ArgumentMatchers.any())).thenReturn(employeeDto);
+		String json = mapper.writeValueAsString(employeeDto);
 		mockMvc.perform(put("/emp/updateemp").contentType(MediaType.APPLICATION_JSON_VALUE).characterEncoding("utf-8")
 				.content(json).accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.firstName", is("bob"))).andExpect(jsonPath("$.lastName", is("chohan")))
@@ -159,7 +159,7 @@ public class EmployeeControllerTest {
 		String uri = "/emp/purgeemp/101010";
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.delete(uri)).andReturn();
 		int status = mvcResult.getResponse().getStatus();
-		assertEquals(200, status);
+		assertEquals(204, status);
 		String content = mvcResult.getResponse().getContentAsString();
 		assertEquals(content, "employee number " + 101010 + " deleted");
 	}
@@ -167,12 +167,12 @@ public class EmployeeControllerTest {
 	@Test
 	public void getAllEmployeeTest() throws Exception {
 
-		Employeedto employee1 = new Employeedto("rolley", "methue", 1010, 27, "ratlam", 457001, "A+", new Date(),
+		EmployeeDto employee1 = new EmployeeDto("rolley", "methue", 1010, 27, "ratlam", 457001, "A+", new Date(),
 				new Date(), false);
-		Employeedto employee2 = new Employeedto("Alex", "Gussin", 2020, 25, "channai", 223344, "A+", new Date(),
+		EmployeeDto employee2 = new EmployeeDto("Alex", "Gussin", 2020, 25, "channai", 223344, "A+", new Date(),
 				new Date(), false);
 
-		List<Employeedto> employees = new ArrayList<Employeedto>();
+		List<EmployeeDto> employees = new ArrayList<EmployeeDto>();
 		employees.add(employee1);
 		employees.add(employee2);
 
@@ -184,54 +184,54 @@ public class EmployeeControllerTest {
 	@Test
 	public void searchEmployeesByfirstNameTest() throws Exception {
 
-		Employeedto employee1 = new Employeedto("alex", "Gussin", 1010, 27, "ratlam", 457001, "A+", new Date(),
+		EmployeeDto employee1 = new EmployeeDto("alex", "Gussin", 1010, 27, "ratlam", 457001, "A+", new Date(),
 				new Date(), false);
-		Employeedto employee2 = new Employeedto("alex", "nelson", 2020, 25, "ratlam", 457001, "A+", new Date(),
+		EmployeeDto employee2 = new EmployeeDto("alex", "nelson", 2020, 25, "ratlam", 457001, "A+", new Date(),
 				new Date(), false);
 
-		List<Employeedto> employees = new ArrayList<Employeedto>();
+		List<EmployeeDto> employees = new ArrayList<EmployeeDto>();
 		employees.add(employee1);
 		employees.add(employee2);
 		String firstName = "alex";
 
-		Mockito.when(empSrvcImpl.searchByfirstName(firstName)).thenReturn(employees);
+		Mockito.when(empSrvcImpl.searchByFirstName(firstName)).thenReturn(employees);
 		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/emp/name/firstName")
 				.contentType(MediaType.APPLICATION_JSON_VALUE);
 
 		mvcResult = mockMvc.perform(builder).andReturn();
-		mockMvc.perform(builder).andExpect(status().isFound());
+		mockMvc.perform(builder).andExpect(status().isOk());
 	}
 
 	@Test
 	public void searchEmployeesByLastNameTest() throws Exception {
 
-		Employeedto employee1 = new Employeedto("alex", "Gussin", 1010, 27, "ratlam", 457001, "A+", new Date(),
+		EmployeeDto employee1 = new EmployeeDto("alex", "Gussin", 1010, 27, "ratlam", 457001, "A+", new Date(),
 				new Date(), false);
-		Employeedto employee2 = new Employeedto("jiyan", "Gussin", 2020, 25, "ratlam", 457001, "A+", new Date(),
+		EmployeeDto employee2 = new EmployeeDto("jiyan", "Gussin", 2020, 25, "ratlam", 457001, "A+", new Date(),
 				new Date(), false);
 
-		List<Employeedto> employees = new ArrayList<Employeedto>();
+		List<EmployeeDto> employees = new ArrayList<EmployeeDto>();
 		employees.add(employee1);
 		employees.add(employee2);
 		String lastName = "Gussin";
 
-		Mockito.when(empSrvcImpl.searchBylastName(lastName)).thenReturn(employees);
+		Mockito.when(empSrvcImpl.searchByLastName(lastName)).thenReturn(employees);
 		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/emp/surname/lastName")
 				.contentType(MediaType.APPLICATION_JSON_VALUE);
 
 		mvcResult = mockMvc.perform(builder).andReturn();
-		mockMvc.perform(builder).andExpect(status().isFound());
+		mockMvc.perform(builder).andExpect(status().isOk());
 	}
 
 	@Test
 	public void searchEmployeesByPincodeTest() throws Exception {
 
-		Employeedto employee1 = new Employeedto("alex", "Gussin", 1010, 27, "ratlam", 457001, "A+", new Date(),
+		EmployeeDto employee1 = new EmployeeDto("alex", "Gussin", 1010, 27, "ratlam", 457001, "A+", new Date(),
 				new Date(), false);
-		Employeedto employee2 = new Employeedto("jiyan", "Gussin", 2020, 25, "ratlam", 457001, "A+", new Date(),
+		EmployeeDto employee2 = new EmployeeDto("jiyan", "Gussin", 2020, 25, "ratlam", 457001, "A+", new Date(),
 				new Date(), false);
 
-		List<Employeedto> employees = new ArrayList<Employeedto>();
+		List<EmployeeDto> employees = new ArrayList<EmployeeDto>();
 		employees.add(employee1);
 		employees.add(employee2);
 		int pincode = 457001;
@@ -241,18 +241,18 @@ public class EmployeeControllerTest {
 				.contentType(MediaType.APPLICATION_JSON_VALUE);
 
 		mvcResult = mockMvc.perform(builder).andReturn();
-		mockMvc.perform(builder).andExpect(status().isFound());
+		mockMvc.perform(builder).andExpect(status().isOk());
 	}
 
 	@Test
 	public void sortByFieldTest() throws Exception {
 
-		Employeedto employee1 = new Employeedto("alex", "Gussin", 1010, 27, "ratlam", 457001, "A+", new Date(),
+		EmployeeDto employee1 = new EmployeeDto("alex", "Gussin", 1010, 27, "ratlam", 457001, "A+", new Date(),
 				new Date(), false);
-		Employeedto employee2 = new Employeedto("jiyan", "Gussin", 2020, 25, "ratlam", 457001, "A+", new Date(),
+		EmployeeDto employee2 = new EmployeeDto("jiyan", "Gussin", 2020, 25, "ratlam", 457001, "A+", new Date(),
 				new Date(), false);
 
-		List<Employeedto> employees = new ArrayList<Employeedto>();
+		List<EmployeeDto> employees = new ArrayList<EmployeeDto>();
 		employees.add(employee1);
 		employees.add(employee2);
 		String field = "firstName";
@@ -262,7 +262,7 @@ public class EmployeeControllerTest {
 				.contentType(MediaType.APPLICATION_JSON_VALUE);
 
 		mvcResult = mockMvc.perform(builder).andReturn();
-		mockMvc.perform(builder).andExpect(status().isFound());
+		mockMvc.perform(builder).andExpect(status().isOk());
 	}
 
 	@Test
@@ -277,7 +277,7 @@ public class EmployeeControllerTest {
 
 	@Test
 	public void updateEmployeeExceptionTest() throws Exception {
-		Employeedto employeedto = new Employeedto("bob", "thomas", 1010, 22, "ratlam", 457001, "A+", new Date(),
+		EmployeeDto employeedto = new EmployeeDto("bob", "thomas", 1010, 22, "ratlam", 457001, "A+", new Date(),
 				new Date(), false);
 
 		Mockito.when(empSrvcImpl.updateEmployee(ArgumentMatchers.any())).thenThrow(ResourceNotFoundException.class);
@@ -306,7 +306,7 @@ public class EmployeeControllerTest {
 	@Test
 	public void searchEmloyeeByfirstNameExceptionTest() throws Exception {
 		String firstName = "alex";
-		Mockito.when(empSrvcImpl.searchByfirstName(firstName)).thenThrow(NoNameResourceFoundException.class);
+		Mockito.when(empSrvcImpl.searchByFirstName(firstName)).thenThrow(NoNameResourceFoundException.class);
 		mockMvc.perform(get("/emp/name/" + firstName).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.characterEncoding("utf-8").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound());
 	}
@@ -314,7 +314,7 @@ public class EmployeeControllerTest {
 	@Test
 	public void searchEmployeeBylastNameExceptionTest() throws Exception {
 		String lastName = "martin";
-		Mockito.when(empSrvcImpl.searchBylastName(lastName)).thenThrow(NoSurnameResourceFoundException.class);
+		Mockito.when(empSrvcImpl.searchByLastName(lastName)).thenThrow(NoSurnameResourceFoundException.class);
 		mockMvc.perform(get("/emp/surname/" + lastName).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.characterEncoding("utf-8").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound());
 	}
